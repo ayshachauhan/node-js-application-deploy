@@ -1,0 +1,25 @@
+FROM node:18
+
+RUN userdel node || true \
+    && groupdel node || true \
+    && groupadd -g 1000 aysha \
+    && useradd --uid 1000 --gid aysha --create-home aysha   
+
+
+# Set working directory
+WORKDIR /server-task
+
+# Copy application files as non-root user
+COPY --chown=1000:1000 . .
+
+# Install dependencies (as root)
+RUN npm install
+
+# Make writable directories owned by non-root user (if needed)
+RUN mkdir -p /server-task/data && chown -R 1000:1000 /server-task/data
+
+# Switch to non-root user
+USER 1000:1000
+
+# Run the application
+CMD ["npm", "start"]
