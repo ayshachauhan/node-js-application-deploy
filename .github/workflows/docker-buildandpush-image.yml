@@ -1,0 +1,8 @@
+services:
+  server-task:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+     - "3030:3030"  
